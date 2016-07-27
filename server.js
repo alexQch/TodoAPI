@@ -31,7 +31,7 @@ app.get('/todos/:id', (req, res)=>{
     //iterate over todo array and find a match
     todos.forEach( (curVal)=>{
         console.log(curVal.id);
-        if (curVal.id === todoId) {
+        if (curVal.id == todoId) {
             console.log('matched todo obj found');
             matchedTodoObj = curVal;
         }
