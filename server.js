@@ -40,6 +40,13 @@ app.get('/todos/:id', (req, res)=>{
 //POST /todos
 app.post('/todos', (req, res)=>{
     var todo = req.body;
+    if ( !_.isBoolean(todo.completed)
+        || !_.isString(todo.description)
+        || todo.description.trim().length === 0)
+    {
+        return res.status(400).send();
+    }
+
     todo.id = todoNextId++;
     todos.push(todo);
     res.json(todo);
