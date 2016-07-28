@@ -26,14 +26,26 @@ app.get('/todos', function (req, res) {
         && queryParams.completed === 'true'
     ){
             filteredTodos = _.where(todos, {completed : true});
-    }else if (
-        queryParams.hasOwnProperty('completed')
-        && queryParams.completed === 'false'
+    }else if ( queryParams.hasOwnProperty('completed')
+                && queryParams.completed === 'false'
     ){
             filteredTodos = _.where(todos, {completed : false});
     }
 
+    if ( queryParams.hasOwnProperty('q')){
+        var q = queryParams.q.trim();
+        if (q.length > 0) {
+            filteredTodos = _.filter(filteredTodos, (todo)=>{
+                if (todo.description.indexOf(q) > -1) {
+                    return true;
+                }else{
+                    return false;
+                }
+            });
+        }
+    }
     res.json(filteredTodos);
+
 });
 
 // GET /todos/:id
