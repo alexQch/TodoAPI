@@ -63,7 +63,7 @@ app.delete('/todos/:id', (req, res)=>{
     //get the todo id
     //find the todo obj based on id
     var matchedTodoObj = _.findWhere(todos, { id: targetId});
-    
+
     if (!matchedTodoObj) {
         res.status(404).json({"error": "no todo found"});
     }
@@ -74,6 +74,42 @@ app.delete('/todos/:id', (req, res)=>{
     res.json(matchedTodoObj);
 });
 
+//PUT /todos/:id
+app.put('/todos/:id', (req, res)=>{
+    var body = _.pick(req.body, 'description', 'completed');
+    var validAttributes = {};
+    var todoId = parseInt(req.params.id);
+    var matchedTodoObj = _.findWhere(todos, { id: todoId });
+
+    //if there's on matched todo return 404
+    if (!matchedTodoObj) {
+        return res.status(404).send();
+    }
+
+    //validation using hasOwnProperty('property') returns a boolean
+    if (body.hasOwnProperty('completed') && _.isBoolean(body.completed)) {
+        validAttributes.completed = body.completed;
+    }else if( body.hasOwnProperty('completed')){
+        res.status(400).send();
+    }else{
+        // never provided attribute, no problem here
+    }
+
+    if (body.hasOwnProperty('description')
+        && _.isString(body.description)
+        && body.description.trim().length > 0
+    ) {
+        validAttributes.description = body.description;
+    }else if( body.hasOwnProperty('description')){
+        res.status(400).send();
+    }
+
+    // HERE do update by _.extend
+    // objects in javascript are passed by reference
+    _.extend(matchedTodoObj, validAttributes);
+    res.json(matchedTodoObj);
+
+});
 
 app.listen(PORT, function () {
     console.log('Express listening on port ' + PORT + '!');
