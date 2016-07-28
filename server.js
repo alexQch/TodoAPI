@@ -21,7 +21,7 @@ app.get('/', function (req, res) {
 app.get('/todos', function (req, res) {
     var queryParams = req.query; //an obj which has all the queries
     //if no query params, simply return the whole array
-    var filteredTodos;
+    var filteredTodos = todos;
     if ( queryParams.hasOwnProperty('completed')
         && queryParams.completed === 'true'
     ){
@@ -29,11 +29,8 @@ app.get('/todos', function (req, res) {
     }else if (
         queryParams.hasOwnProperty('completed')
         && queryParams.completed === 'false'
-    ) {
+    ){
             filteredTodos = _.where(todos, {completed : false});
-    }else{
-        res.json(todos);
-        return
     }
 
     res.json(filteredTodos);
