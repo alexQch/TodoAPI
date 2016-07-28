@@ -36,7 +36,7 @@ app.get('/todos', function (req, res) {
         var q = queryParams.q.trim();
         if (q.length > 0) {
             filteredTodos = _.filter(filteredTodos, (todo)=>{
-                if (todo.description.indexOf(q) > -1) {
+                if (todo.description.toLowerCase().indexOf(q.toLowerCase()) > -1) {
                     return true;
                 }else{
                     return false;
