@@ -65,7 +65,7 @@ app.delete('/todos/:id', (req, res)=>{
     var matchedTodoObj = _.findWhere(todos, { id: targetId});
     
     if (!matchedTodoObj) {
-        res.status(404).json("error": "no todo foudn");
+        res.status(404).json({"error": "no todo found"});
     }
 
     //remove it from todos using _.without
