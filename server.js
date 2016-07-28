@@ -57,6 +57,8 @@ app.post('/todos', (req, res)=>{
 
 // DELETE /todos/:id
 app.delete('/todos/:id', (req, res)=>{
+    //this step is important!!
+    //we need to assure that the id is an number!
     var targetId = parseInt(req.params.id);
     //get the todo id
     //find the todo obj based on id
