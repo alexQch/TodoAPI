@@ -1,4 +1,4 @@
-var Sequelize = require('Sequelize');
+var Sequelize = require('sequelize');
 var sequelize = new Sequelize(undefined, undefined, undefined, {
     'dialect': 'sqlite',
     'storage': __dirname + '/basic-sqlite-database.sqlite'
@@ -29,6 +29,7 @@ sequelize.sync({force: false}).then( ()=>{
             console.log('todo not found');
         }
     });
+
     /*Todo.create({
         description: 'Walk my dog',
         completed: false
