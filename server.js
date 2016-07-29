@@ -52,17 +52,16 @@ app.get('/todos', function (req, res) {
 // GET /todos/:id
 app.get('/todos/:id', (req, res)=>{
     var todoId = parseInt(req.params.id);
-    var matchedTodoObj = _.findWhere(todos, { id: todoId });
-    console.log(`id: ${todoId}  matchedTodoObj: ${matchedTodoObj}`);
 
-    if (!matchedTodoObj) {
-        console.log('matched obj not found!');
-        //to send a 404: res.status(404).send();
-        res.status(404).send();
-    }else{
-        // send back json data
-        res.json(matchedTodoObj);
-    }
+    db.todo.findById(todoId).then( (todo)=>{
+        if (!!todo) {
+            res.json(todo.toJSON());
+        }else{
+            res.status(404).send();
+        }
+    }, (e)=>{
+        res.status(404).json(e);
+    });
 });
 
 //POST /todos
