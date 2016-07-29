@@ -77,21 +77,6 @@ app.post('/todos', (req, res)=>{
     });
     //  if sucessful then respond 200 and todo object
     //  if failed return the error obj by res.status(400).json(e)
-
-    /*var todo = _.pick(req.body, 'description', 'completed');
-    //use _.pick to only pick description and completed
-    if ( !_.isBoolean(todo.completed)
-        || !_.isString(todo.description)
-        || todo.description.trim().length === 0)
-    {
-        return res.status(400).send();
-    }
-
-    //update body.description to the trim value
-    todo.description = todo.description.trim();
-    todo.id = todoNextId++;
-    todos.push(todo);
-    res.json(todo);*/
 });
 
 // DELETE /todos/:id
