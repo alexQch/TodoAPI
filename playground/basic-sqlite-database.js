@@ -22,15 +22,15 @@ var Todo = sequelize.define('todo', {
 sequelize.sync({force: false}).then( ()=>{
     console.log('Everything is synced');
 
-    Todo.findById(3).then( (todo)=>{
+    /*Todo.findById(3).then( (todo)=>{
         if (todo) {
             console.log(todo.toJSON());
         }else{
             console.log('todo not found');
         }
-    });
+    });*/
 
-    /*Todo.create({
+    Todo.create({
         description: 'Walk my dog',
         completed: false
     }).then((todo)=>{
@@ -55,5 +55,5 @@ sequelize.sync({force: false}).then( ()=>{
         }
     }).catch((e)=>{
         console.log
-    });*/
+    });
 });

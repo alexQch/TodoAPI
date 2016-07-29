@@ -67,7 +67,18 @@ app.get('/todos/:id', (req, res)=>{
 
 //POST /todos
 app.post('/todos', (req, res)=>{
+
+    //call create on db.todo
     var todo = _.pick(req.body, 'description', 'completed');
+    db.todo.create(todo).then( (todo)=>{
+        res.json(todo.toJSON());
+    }).catch( (e)=>{
+        res.status(400).json(e);
+    });
+    //  if sucessful then respond 200 and todo object
+    //  if failed return the error obj by res.status(400).json(e)
+
+    /*var todo = _.pick(req.body, 'description', 'completed');
     //use _.pick to only pick description and completed
     if ( !_.isBoolean(todo.completed)
         || !_.isString(todo.description)
@@ -80,7 +91,7 @@ app.post('/todos', (req, res)=>{
     todo.description = todo.description.trim();
     todo.id = todoNextId++;
     todos.push(todo);
-    res.json(todo);
+    res.json(todo);*/
 });
 
 // DELETE /todos/:id
