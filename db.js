@@ -4,7 +4,7 @@ var sequelize;
 
 //depend on the environment, set up the correct database for use
 if (env === 'production') {
-    sequelize = neew Sequelize(process.env.DATABASE_URL, {
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
         dialect: 'postgres'
     });
 }else{
