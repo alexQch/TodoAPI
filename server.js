@@ -92,19 +92,18 @@ app.post('/todos', (req, res)=>{
 app.delete('/todos/:id', (req, res)=>{
     //this step is important!!
     //we need to assure that the id is an number!
-    var targetId = parseInt(req.params.id);
     //get the todo id
-    //find the todo obj based on id
-    var matchedTodoObj = _.findWhere(todos, { id: targetId});
+    var targetId = parseInt(req.params.id);
 
-    if (!matchedTodoObj) {
-        res.status(404).json({"error": "no todo found"});
-    }
+    db.todo.destroy({
+        where: {
+            id: targetId
+        }
+    }).then( (num)=>{
+        console.log('Delete item num: ' + num);
+        res.status(200).send( num + ' item deleted');
+    });
 
-    //remove it from todos using _.without
-    todos = _.without(todos, matchedTodoObj);
-    //return the deleted obj
-    res.json(matchedTodoObj);
 });
 
 //PUT /todos/:id
