@@ -104,7 +104,7 @@ app.delete('/todos/:id', (req, res)=>{
         if (num === 1) {
             res.status(200).send( 'item deleted');
         }else if(num === 0){
-            //204 means everything works fine 
+            //204 means everything works fine
             //and we don't have anything to return
             res.status(204).send('item found!');
         }
@@ -117,38 +117,33 @@ app.delete('/todos/:id', (req, res)=>{
 //PUT /todos/:id
 app.put('/todos/:id', (req, res)=>{
     var body = _.pick(req.body, 'description', 'completed');
-    var validAttributes = {};
+    var attributes = {};
     var todoId = parseInt(req.params.id);
-    var matchedTodoObj = _.findWhere(todos, { id: todoId });
-
-    //if there's on matched todo return 404
-    if (!matchedTodoObj) {
-        return res.status(404).send();
-    }
 
     //validation using hasOwnProperty('property') returns a boolean
-    if (body.hasOwnProperty('completed') && _.isBoolean(body.completed)) {
-        validAttributes.completed = body.completed;
-    }else if( body.hasOwnProperty('completed')){
-        res.status(400).send();
-    }else{
-        // never provided attribute, no problem here
+    if (body.hasOwnProperty('completed')) {
+        attributes.completed = body.completed;
     }
 
-    if (body.hasOwnProperty('description')
-        && _.isString(body.description)
-        && body.description.trim().length > 0
-    ) {
-        validAttributes.description = body.description;
-    }else if( body.hasOwnProperty('description')){
-        res.status(400).send();
+    if (body.hasOwnProperty('description')) {
+        attributes.description = body.description;
     }
 
-    // HERE do update by _.extend
-    // objects in javascript are passed by reference
-    _.extend(matchedTodoObj, validAttributes);
-    res.json(matchedTodoObj);
-
+    db.todo.findById( todoId )
+        .then( (todo)=>{
+            if (todo) {
+                return todo.update(attributes)
+                    .then( (todo)=>{
+                        res.json(todo.toJSON());
+                    }, (e) =>{
+                        res.status(400).send(e);
+                    });
+            }else{
+                res.status(404).send();
+            }
+        }, ()=>{
+            res.status(500).send();
+        })
 });
 
 db.sequelize.sync().then( ()=>{
