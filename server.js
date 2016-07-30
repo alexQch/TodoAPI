@@ -101,7 +101,15 @@ app.delete('/todos/:id', (req, res)=>{
         }
     }).then( (num)=>{
         console.log('Delete item num: ' + num);
-        res.status(200).send( num + ' item deleted');
+        if (num === 1) {
+            res.status(200).send( 'item deleted');
+        }else if(num === 0){
+            //204 means everything works fine 
+            //and we don't have anything to return
+            res.status(204).send('item found!');
+        }
+    }, (e)=>{
+        res.status(500).send();
     });
 
 });
