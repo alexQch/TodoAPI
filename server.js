@@ -92,7 +92,7 @@ app.post('/todos', (req, res)=>{
 app.post('/users', (req, res)=>{
     var user = _.pick(req.body, 'email', 'password');
     db.user.create(user).then( (user)=>{
-        res.json(user.toJSON());
+        res.json(user.toPublicJSON());
     }, (e)=>{
         res.status(400).send(e);
     }).catch( (e)=>{
