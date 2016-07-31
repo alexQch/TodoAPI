@@ -88,6 +88,17 @@ app.post('/todos', (req, res)=>{
     //  if failed return the error obj by res.status(400).json(e)
 });
 
+//POST /users to add user into database
+app.post('/users', (req, res)=>{
+    var user = _.pick(req.body, 'email', 'password');
+    db.user.create(user).then( (user)=>{
+        res.json(user.toJSON());
+    }, (e)=>{
+        res.status(400).send(e);
+    }).catch( (e)=>{
+        res.status(400).send(e);
+    });
+})
 // DELETE /todos/:id
 app.delete('/todos/:id', (req, res)=>{
     //this step is important!!
