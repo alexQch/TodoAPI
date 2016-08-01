@@ -88,7 +88,7 @@ module.exports = function( sequelize, DataTypes ){
                     var encryptedData = cryptojs.AES.encrypt(stringData, 'abc123!@#').toString();
                     var token = jwt.sign({
                         token: encryptedData,
-                    }, 'qwerty098');
+                    }, 'qwerty098'); //this string is the JWT password
 
                     return token;
                 } catch (e) {
