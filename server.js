@@ -23,7 +23,9 @@ app.get('/', function (req, res) {
 // GET /todos?key=value
 app.get('/todos', middleware.requireAuthentication, function (req, res) {
     var query = req.query; //an obj which has all the queries
-    var where = {};
+    var where = {
+        userId: req.user.get('id')
+    };
 
     if ( query.hasOwnProperty('completed')
         && query.completed === 'true'
@@ -65,7 +67,12 @@ app.get('/todos', middleware.requireAuthentication, function (req, res) {
 app.get('/todos/:id', middleware.requireAuthentication, (req, res)=>{
     var todoId = parseInt(req.params.id);
 
-    db.todo.findById(todoId).then( (todo)=>{
+    var where = {
+        userId: req.user.get('id'),
+        id: todoId
+    }
+
+    db.todo.findOne({where: where}).then( (todo)=>{
         if (!!todo) {
             res.json(todo.toJSON());
         }else{
@@ -117,7 +124,8 @@ app.delete('/todos/:id', middleware.requireAuthentication, (req, res)=>{
 
     db.todo.destroy({
         where: {
-            id: targetId
+            id: targetId,
+            userId: req.user.get('id')
         }
     }).then( (num)=>{
         console.log('Delete item num: ' + num);
@@ -126,7 +134,7 @@ app.delete('/todos/:id', middleware.requireAuthentication, (req, res)=>{
         }else if(num === 0){
             //204 means everything works fine
             //and we don't have anything to return
-            res.status(204).send('item found!');
+            res.status(204).send('item not  found!');
         }
     }, (e)=>{
         res.status(500).send();
@@ -149,8 +157,12 @@ app.put('/todos/:id', middleware.requireAuthentication, (req, res)=>{
         attributes.description = body.description;
     }
 
-    db.todo.findById( todoId )
-        .then( (todo)=>{
+    db.todo.findOne( {
+        where: {
+            id: todoId,
+            userId: req.user.get('id')
+        }
+    }).then( (todo)=>{
             if (todo) {
                 return todo.update(attributes)
                     .then( (todo)=>{
