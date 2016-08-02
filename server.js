@@ -182,16 +182,27 @@ app.put('/todos/:id', middleware.requireAuthentication, (req, res)=>{
 // POST /users/login
 app.post('/users/login', (req, res)=>{
     var body = _.pick(req.body, 'email', 'password');
+    var userInstance;
 
     db.user.authenticate(body).then((user)=>{
         var token = user.generateToken('authentication');
-        if (token) {
-            res.header('Auth', token).json(user.toPublicJSON());
-        }else{
-            res.status(401).send();
-        }
-    }, (e)=>{
+        userInstance = user;
+        return db.token.create({
+            token: token
+        })
+    }).then( (tokenInstance)=>{
+        res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
+    }).catch( (e)=>{
         res.status(401).send();
+    });
+});
+
+//DELETE /users/login
+app.delete('/users/login',middleware.requireAuthentication, (req, res)=>{
+    req.token.destroy().then( ()=>{
+        res.status(204).send();
+    }).catch( (e)=>{
+        res.status(500).send();
     });
 });
 
