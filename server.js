@@ -80,9 +80,16 @@ app.get('/todos/:id', middleware.requireAuthentication, (req, res)=>{
 app.post('/todos', middleware.requireAuthentication, (req, res)=>{
 
     //call create on db.todo
-    var todo = _.pick(req.body, 'description', 'completed');
-    db.todo.create(todo).then( (todo)=>{
-        res.json(todo.toJSON());
+    var body = _.pick(req.body, 'description', 'completed');
+    db.todo.create(body).then( (todo)=>{
+        //create the association here by addTodo
+        req.user.addTodo(todo).then( ()=>{
+            console.log(todo.toJSON());
+            //the ref todo here is different than what we have in database
+            return todo.reload();
+        }).then( (todo)=>{
+            res.json(todo.toJSON());
+        });
     }).catch( (e)=>{
         res.status(400).json(e);
     });
